@@ -1,4 +1,6 @@
+#ifndef HOST_TEST
 #include <avr/pgmspace.h>
+#endif
 
 #ifndef ARDUBOY_LOGO_CREATED
 #define ARDUBOY_LOGO_CREATED

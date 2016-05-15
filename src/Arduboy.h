@@ -2,9 +2,11 @@
 #define Arduboy_h
 
 #include "core/core.h"
+#ifndef HOST_TEST
 #include "ab_printer.h"
 #include <Print.h>
 #include <limits.h>
+#endif
 
 // Library version.
 // For a version number in the form of x.y.z the value of the define will be
@@ -20,8 +22,10 @@
 // we reserve the first 16 byte of EEPROM for system use
 #define EEPROM_STORAGE_SPACE_START 16 // and onward
 
+#ifndef HOST_TEST
 // eeprom settings above are neded for audio
 #include "audio/audio.h"
+#endif
 
 #define PIXEL_SAFE_MODE
 
@@ -30,13 +34,18 @@
 #define WHITE 1 //< lit pixel
 #define BLACK 0 //< unlit pixel
 
+#ifndef HOST_TEST
 // compare Vcc to 1.1 bandgap
 #define ADC_VOLTAGE (_BV(REFS0) | _BV(MUX4) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1))
 // compare temperature to 2.5 internal reference and _BV(MUX5)
 #define ADC_TEMP (_BV(REFS0) | _BV(REFS1) | _BV(MUX2) | _BV(MUX1) | _BV(MUX0))
+#endif
 
-
+#ifdef HOST_TEST
+class Arduboy
+#else
 class Arduboy : public ArduboyCore
+#endif
 {
 public:
   Arduboy();
@@ -178,7 +187,9 @@ public:
   /// Swap the references of two pointers.
   void swap(int16_t& a, int16_t& b);
 
+#ifndef HOST_TEST
   ArduboyAudio audio;
+#endif
 
   void setFrameRate(uint8_t rate);
   bool nextFrame();

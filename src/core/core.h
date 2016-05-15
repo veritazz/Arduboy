@@ -1,10 +1,43 @@
 #ifndef ArduboyCore_h
 #define ArduboyCore_h
 
+#ifndef HOST_TEST
 #include <avr/power.h>
 #include <SPI.h>
 #include <avr/sleep.h>
 #include <limits.h>
+#else
+
+#include <time.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+#define PROGMEM
+#define pgm_read_byte_near(a)		*(a)
+#define pgm_read_byte(a)		*(a)
+#define _BV(bit)			(1 << (bit))
+#define min(a, b)			((a) < (b)? (a): (b))
+#define max(a, b)			((a) > (b)? (a): (b))
+
+static inline unsigned long millis(void)
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return ((ts.tv_sec * 1000) + (ts.tv_nsec / 1000000));
+}
+
+static inline void delay(unsigned int ms)
+{
+	unsigned long cur;
+	unsigned long end = millis() + ms;
+	do {
+		cur = millis();
+	} while (cur < end);
+}
+
+#endif
 
 
 // main hardware compile flags

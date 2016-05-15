@@ -1,5 +1,7 @@
 #include "Arduboy.h"
+#ifndef HOST_TEST
 #include "glcdfont.c"
+#endif
 #include "ab_logo.c"
 
 Arduboy::Arduboy()
@@ -25,20 +27,25 @@ void Arduboy::start() // deprecated
 // provides by default
 void Arduboy::begin()
 {
+#ifndef HOST_TEST
   boot(); // raw hardware
 
   // utils
   if(pressed(UP_BUTTON)) {
     flashlight();
   }
+#endif
 
   bootLogo();
 
+#ifndef HOST_TEST
   audio.begin();
+#endif
 }
 
 void Arduboy::flashlight()
 {
+#ifndef HOST_TEST
   // sendLCDCommand(OLED_ALL_PIXELS_ON); // smaller than allPixelsOn()
   blank();
   setRGBled(255,255,255);
@@ -46,13 +53,16 @@ void Arduboy::flashlight()
     idle();
   }
   setRGBled(0,0,0);
+#endif
 }
 
 void Arduboy::bootLogo()
 {
   // setRGBled(10,0,0);
   for(int8_t y = -18; y<=24; y++) {
+#ifndef HOST_TEST
     setRGBled(24-y, 0, 0);
+#endif
 
     clear();
     drawBitmap(20,y, arduboy_logo, 88, 16, WHITE);
@@ -66,7 +76,9 @@ void Arduboy::bootLogo()
   }
 
   delay(750);
+#ifndef HOST_TEST
   setRGBled(0,0,0);
+#endif
 }
 
 /* Frame management */
@@ -99,8 +111,10 @@ bool Arduboy::nextFrame()
     remaining = nextFrameStart - now;
     // if we have more than 1ms to spare, lets sleep
     // we should be woken up by timer0 every 1ms, so this should be ok
+#ifndef HOST_TEST
     if (remaining > 1)
       idle();
+#endif //XXX
     return false;
   }
 
@@ -136,13 +150,16 @@ int Arduboy::cpuLoad()
 
 void Arduboy::initRandomSeed()
 {
+#ifndef HOST_TEST
   power_adc_enable(); // ADC on
   randomSeed(~rawADC(ADC_TEMP) * ~rawADC(ADC_VOLTAGE) * ~micros() + micros());
   power_adc_disable(); // ADC off
+#endif
 }
 
 uint16_t Arduboy::rawADC(uint8_t adc_bits)
 {
+#ifndef HOST_TEST
   ADMUX = adc_bits;
   // we also need MUX5 for temperature check
   if (adc_bits == ADC_TEMP) {
@@ -154,6 +171,8 @@ uint16_t Arduboy::rawADC(uint8_t adc_bits)
   while (bit_is_set(ADCSRA,ADSC)); // measuring
 
   return ADC;
+#endif
+  return 0;
 }
 
 /* Graphics */
@@ -450,6 +469,7 @@ void Arduboy::fillRect
 
 void Arduboy::fillScreen(uint8_t color)
 {
+#ifndef HOST_TEST
   // C version :
   //
   // if (color) color = 0xFF;  //change any nonzero argument to b11111111 and insert into screen array.
@@ -484,6 +504,10 @@ void Arduboy::fillScreen(uint8_t color)
     : "r" (sBuffer), "r" (color)
     : "r30", "r31", "r27"
   );
+#else
+  if (color) color = 0xFF;  //change any nonzero argument to b11111111 and insert into screen array.
+  for(int16_t i=0; i<1024; i++)  { sBuffer[i] = color; }  //sBuffer = (128*64) = 8192/8 = 1024 bytes.
+#endif
 }
 
 void Arduboy::drawRoundRect
@@ -684,6 +708,7 @@ void Arduboy::drawSlowXYBitmap
 void Arduboy::drawChar
 (int16_t x, int16_t y, unsigned char c, uint8_t color, uint8_t bg, uint8_t size)
 {
+#ifndef HOST_TEST
   bool draw_background = bg != color;
 
   if ((x >= WIDTH) ||         // Clip right
@@ -721,11 +746,21 @@ void Arduboy::drawChar
       line >>= 1;
     }
   }
+#endif
 }
+
+
+#ifdef HOST_TEST
+extern void update_screen();
+#endif
 
 void Arduboy::display()
 {
+#ifndef HOST_TEST
   this->paintScreen(sBuffer);
+#else
+  update_screen();
+#endif
 }
 
 unsigned char* Arduboy::getBuffer()
@@ -735,12 +770,16 @@ unsigned char* Arduboy::getBuffer()
 
 bool Arduboy::pressed(uint8_t buttons)
 {
+#ifndef HOST_TEST
   return (buttonsState() & buttons) == buttons;
+#endif
 }
 
 bool Arduboy::notPressed(uint8_t buttons)
 {
+#ifndef HOST_TEST
   return (buttonsState() & buttons) == 0;
+#endif
 }
 
 void Arduboy::swap(int16_t& a, int16_t& b)
