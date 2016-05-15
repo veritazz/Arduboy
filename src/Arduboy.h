@@ -45,13 +45,13 @@ public:
   /**
    * if (pressed(LEFT_BUTTON + A_BUTTON))
    */
-  boolean pressed(uint8_t buttons);
+  bool pressed(uint8_t buttons);
 
   /// Returns true if the button mask passed in not pressed.
   /**
    * if (notPressed(LEFT_BUTTON))
    */
-  boolean notPressed(uint8_t buttons);
+  bool notPressed(uint8_t buttons);
 
   /// Initialize hardware, boot logo, boot utilities, etc.
   void begin();
@@ -201,7 +201,7 @@ public:
   uint8_t lastFrameDurationMs;
 
   /// useful for getting raw approximate voltage values
-  uint16_t rawADC(byte adc_bits);
+  uint16_t rawADC(uint8_t adc_bits);
 
 protected:
   unsigned char sBuffer[(HEIGHT*WIDTH)/8];
@@ -211,7 +211,7 @@ protected:
   int16_t cursor_x;
   int16_t cursor_y;
   uint8_t textsize;
-  boolean wrap; // If set, 'wrap' text at right edge of display
+  bool wrap; // If set, 'wrap' text at right edge of display
 };
 
 #endif

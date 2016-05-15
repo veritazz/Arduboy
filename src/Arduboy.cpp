@@ -141,7 +141,7 @@ void Arduboy::initRandomSeed()
   power_adc_disable(); // ADC off
 }
 
-uint16_t Arduboy::rawADC(byte adc_bits)
+uint16_t Arduboy::rawADC(uint8_t adc_bits)
 {
   ADMUX = adc_bits;
   // we also need MUX5 for temperature check
@@ -325,7 +325,7 @@ void Arduboy::drawLine
 (int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t color)
 {
   // bresenham's algorithm - thx wikpedia
-  boolean steep = abs(y1 - y0) > abs(x1 - x0);
+  bool steep = abs(y1 - y0) > abs(x1 - x0);
   if (steep) {
     swap(x0, y0);
     swap(x1, y1);
@@ -684,7 +684,7 @@ void Arduboy::drawSlowXYBitmap
 void Arduboy::drawChar
 (int16_t x, int16_t y, unsigned char c, uint8_t color, uint8_t bg, uint8_t size)
 {
-  boolean draw_background = bg != color;
+  bool draw_background = bg != color;
 
   if ((x >= WIDTH) ||         // Clip right
     (y >= HEIGHT) ||        // Clip bottom
@@ -733,12 +733,12 @@ unsigned char* Arduboy::getBuffer()
   return sBuffer;
 }
 
-boolean Arduboy::pressed(uint8_t buttons)
+bool Arduboy::pressed(uint8_t buttons)
 {
   return (buttonsState() & buttons) == buttons;
 }
 
-boolean Arduboy::notPressed(uint8_t buttons)
+bool Arduboy::notPressed(uint8_t buttons)
 {
   return (buttonsState() & buttons) == 0;
 }
