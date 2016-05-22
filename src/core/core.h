@@ -15,8 +15,8 @@
 #include <stdlib.h>
 
 #define PROGMEM
-#define pgm_read_byte_near(a)		*(a)
-#define pgm_read_byte(a)		*(a)
+#define pgm_read_word(a)		*((uint16_t *)(a))
+#define pgm_read_byte(a)		*((uint8_t *)(a))
 #define _BV(bit)			(1 << (bit))
 #define min(a, b)			((a) < (b)? (a): (b))
 #define max(a, b)			((a) > (b)? (a): (b))

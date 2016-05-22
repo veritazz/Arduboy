@@ -133,6 +133,7 @@ bool Arduboy::nextFrame()
   // that lost time.  That would not be good.  We allow frames to take too
   // long (what choice do we have?), but we do not allow super-fast frames
   // to make up for slow frames in the past.
+
   if (nextFrameStart < now) {
     nextFrameStart = now;
   }
